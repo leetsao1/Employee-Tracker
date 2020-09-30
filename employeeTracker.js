@@ -61,18 +61,22 @@ function viewSelection(){
         type: "rawlist",
         message: "What next?",
         choices: [
-            "View all records",
+            "View all employee records",
             "Search records by manager",
+            "Show Department Budget",
             "Exit"
         ]
     })
     .then(function(res){
         switch(res["view menu"]) {
-            case "View all records":
+            case "View all employee records":
             viewAll();         
               break;
             case "Search records by manager":
               searchByManager();  
+              break;
+            case "Show Department Budget":
+              displayDepartmentBudget();  
               break;
             case "Exit":
               connection.end(); 
@@ -142,6 +146,30 @@ function searchByManager(){
     //         console.log(res);
     // });
 };
+
+function displayDepartmentBudget(){
+    inquirer
+    .prompt({
+        name: "department",
+        type: "input",
+        message: "Enter department ID:"
+    })
+    .then(function(res){
+        var query = connection.query(
+            "SELECT SUM(salary) FROM employee_trackerDB.role JOIN employee_trackerDB.employee ON employee_trackerDB.role.department_id = employee_trackerDB.employee.role_id WHERE department_id = ?;" , 
+            [res["department"]],
+            function (err,res){
+                if (err)throw err;
+                console.log("The Department Budget is = $" + JSON.stringify(res[0]["SUM(salary)"] ) )
+                connection.end();
+            }
+        );
+    }).catch(function(error){
+        console.log(error);
+    });
+
+};
+
 
 //== ADD DATA MENU ==
 
