@@ -1,5 +1,11 @@
 # Employee-Tracker
- HW12
+  Version: 1.0.0
+  URL: https://github.com/leetsao1/Employee-Tracker
+  GITHUB: https://github.com/leetsao1
+  APP URL: https://fast-headland-12010.herokuapp.com/
+
+![Gif](./Assets/SQL1.gif)
+![Gif](./Assets/SQL1.gif)
 
 
 MIT License
@@ -23,3 +29,20 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+ ## Description, Installation, Usage, Contributing, and Tests
+
+  * The employee tracker is a CLI application that runs on NODE.JS. It prompts the user a menu with options to view, add, update or delete records from an employee database. The database is build using SQL and the schema can be build using the employeeTracker.sql file on MySQL-Workbench.
+  
+  * Installation: To use Employee-Tracker you must have node installed in your computer. NPM packages required are ‘Inquirer’ and ‘MySQL’.
+
+
+  * Usage: Download and install on desired folder. Open the command window and type node index.js to run the program.
+
+
+  * Contributors: Lee Tsao
+
+  * Test: NA
+
+  * Questions: Direct all questions directly to leetsao1@gmail.com
+

@@ -40,7 +40,7 @@ function startInquiry (){
                 addRecord();
               break;
             case "Update Record":
-                console.log ("UPDATE Switch worked");
+                updateRecord();
                 break;
             case "Delete Record":
                 deleteRecord();
@@ -284,6 +284,66 @@ function addEmployee(){
 };
 
 //== UPDATE QUERY ==
+function updateRecord(){
+    inquirer
+    .prompt([
+        {
+            name: "name",
+            type: "input",
+            message: "Enter employee first name:"
+        },
+        {
+            name: "lastName",
+            type: "input",
+            message: "Enter employee last name"
+        },
+        {
+        name: "updateEmployee",
+        type: "rawlist",
+        message: "What needs to be UPDATED?",
+        choices: [
+            "Employee Role",
+            "Employee Manager",
+            "Go back to previous page"
+            ]
+        },
+        {
+            name: "new-id",
+            type: "input",
+            message: "Enter new ID#"
+        }
+    ])
+    .then(function(res){
+        switch(res["updateEmployee"]) {
+            case "Employee Role":
+              updateRole(res["name"],res["lastName"],res["new-id"]);
+              break;
+            case "Employee Manager":
+              updateManager(res["name"],res["lastName"],res["new-id"]);
+              break;
+            case "Go back to previous page":
+              startInquiry();
+              break;
+          }
+    }).catch(function(error){
+        console.log(error);
+    });
+};
+function updateRole(name, lastName, id){
+    var query = `UPDATE employee_trackerDB.employee SET role_id = ${id} WHERE first_name = "${name}"  AND last_name = "${lastName}"`;  
+        connection.query(query, function(err, res) {
+            console.log(`The employee role was added UPDATED`);
+            connection.end();
+        });
+}
+
+function updateManager(name, lastName, id){
+    var query = `UPDATE employee_trackerDB.employee SET manager_id = ${id} WHERE first_name = "${name}"  AND last_name = "${lastName}"`;  
+        connection.query(query, function(err, res) {
+            console.log(`The employee manager was added UPDATED`);
+            connection.end();
+        });
+};
 
 
 //== DELETE QUERY ==
