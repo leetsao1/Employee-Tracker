@@ -1,6 +1,7 @@
 const inquirer = require("inquirer");
 const Choice = require("inquirer/lib/objects/choice");
 const mysql = require ("mysql");
+const { start } = require("repl");
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -33,11 +34,10 @@ function startInquiry (){
     .then(function(response){
         switch(response.start) {
             case "View Data":
-              console.log ("VIEW Switch worked");
               viewSelection();         
               break;
             case "Add Data":
-             console.log ("ADD Switch worked");
+                addRecord();
               break;
             case "Update Record":
                 console.log ("UPDATE Switch worked");
@@ -59,7 +59,7 @@ function viewSelection(){
     .prompt({
         name: "view menu",
         type: "rawlist",
-        message: "What next?",
+        message: "Make a selection?",
         choices: [
             "View all employee records",
             "Search records by manager",
@@ -167,15 +167,125 @@ function displayDepartmentBudget(){
     }).catch(function(error){
         console.log(error);
     });
-
 };
 
 
 //== ADD DATA MENU ==
+function addRecord(){
+    inquirer
+    .prompt({
+        name: "addRecord",
+        type: "rawlist",
+        message: "What type of new data would you like to add?",
+        choices: [
+            "Department",
+            "Role",
+            "Employee",
+            "Go back to previous page"
+        ]
+    })
+    .then(function(res){
+        switch(res["addRecord"]) {
+            case "Department":
+              addDepartment();
+              break;
+            case "Role":
+              addRole();
+              break;
+            case "Employee":
+              addEmployee();
+              break;
+            case "Go back to previous page":
+              startInquiry();
+            //   connection.end(); 
+              break;
+          }
+    }).catch(function(error){
+        console.log(error);
+    });
+};
+
+function addDepartment(){
+    inquirer
+    .prompt({
+        name: "department",
+        type: "input",
+        message: "Enter new department name:"
+    })
+    .then(function(res){
+        var query = "INSERT INTO departments (name) VALUES (?)";
+        connection.query(query, [res["department"]], function(err, res) {
+            console.log(`The new department was added to the list`);
+            connection.end();
+        });
+
+    })
+};
+
+function addRole(){
+    inquirer
+    .prompt([
+    {
+        name: "title",
+        type: "input",
+        message: "Enter new department role title:"
+    },
+    {
+        name: "salary",
+        type: "input",
+        message: "Enter Salary:"
+    },
+    {
+        name: "department-id",
+        type: "input",
+        message: "Assign a department id:"
+    }
+    ])
+    .then(function(res){
+        var query = "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)";
+        connection.query(query, [res["title"], res["salary"], res["department-id"]], function(err, res) {
+            console.log(`The new role was added to the list`);
+            connection.end();
+        });
+    });
+};
+
+function addEmployee(){
+    inquirer
+    .prompt([
+    {
+        name: "name",
+        type: "input",
+        message: "Enter new employee first name:"
+    },
+    {
+        name: "lastName",
+        type: "input",
+        message: "Enter employee last name"
+    },
+    {
+        name: "role-id",
+        type: "input",
+        message: "Assign a role ID:"
+    },
+    {
+        name: "manager-id",
+        type: "input",
+        message: "Assign a manager ID:"
+    }
+    ])
+    .then(function(res){
+        var query = "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)" ;
+        connection.query(query, [res["name"], res["lastName"], res["role-id"], res["manager-id"]], function(err, res) {
+            console.log(`The new employee was added to the list`);
+            connection.end();
+        });
+    });
+};
 
 
-//Start inquirer questionnaire asking 
-//
+
+
     // 1)VIEW OPTION -DONE
     // 1.1) view all employees (If inquiry.view = view then ...) -DONE
         // Do a SELECT * FROM query -DONE
@@ -186,14 +296,14 @@ function displayDepartmentBudget(){
         //Query all manager IDs and do a INQUIRY -DONE
         //select manager -DONE
         //SELECT from employee where manager_id = ? , [] , call back -DONE
-    // 1.3 (OPTIONAL)View Total salary of a department
-        //Query all departments from "department table"
-        //JOIN 'department table-id' with 'role table-id' and FILTER by salary 
+    // 1.3 (OPTIONAL)View Total salary of a department -DONE
+        //Query all departments from "department table" -DONE
+        //JOIN 'department table-id' with 'role table-id' and FILTER by salary  -DONE
 // 2)add (if inquiry.view = add then..) - done
-    //continue inquiry asking what data wants to be added (Department, role or employee). This could just ask all values and create all 3 tables
-    //Console log new inputs. Confirm and accept 
-    //END connection
-// 3)update role or manager (if .view == update then..) -done
+    //continue inquiry asking what data wants to be added (Department, role or employee). This could just ask all values and create all 3 tables -DONE
+    //Console log new inputs. Confirm and accept -DONE
+    //END connection -DONE
+// 3)update role or manager (if .view == update then..) -DONE
       //Query a view of all employee names and ID
       //ASK what type of data to update? ROLE or MANAGER?
         //IF ROLE
