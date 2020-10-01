@@ -43,7 +43,7 @@ function startInquiry (){
                 console.log ("UPDATE Switch worked");
                 break;
             case "Delete Record":
-                console.log ("DELETE Switch worked");
+                deleteRecord();
                 break;
             case "Exit":
                 console.log ("Program ended, Good bye.");
@@ -278,6 +278,100 @@ function addEmployee(){
         var query = "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)" ;
         connection.query(query, [res["name"], res["lastName"], res["role-id"], res["manager-id"]], function(err, res) {
             console.log(`The new employee was added to the list`);
+            connection.end();
+        });
+    });
+};
+
+//== UPDATE QUERY ==
+
+
+//== DELETE QUERY ==
+function deleteRecord(){
+    inquirer
+    .prompt({
+        name: "deleteRecord",
+        type: "rawlist",
+        message: "What type of data would you like to DELETE?",
+        choices: [
+            "Department",
+            "Role",
+            "Employee",
+            "Go back to previous page"
+        ]
+    })
+    .then(function(res){
+        switch(res["deleteRecord"]) {
+            case "Department":
+              deleteDepartment();
+              break;
+            case "Role":
+              deleteRole();
+              break;
+            case "Employee":
+              deleteEmployee();
+              break;
+            case "Go back to previous page":
+              startInquiry();
+            //   connection.end(); 
+              break;
+          }
+    }).catch(function(error){
+        console.log(error);
+    });
+};
+
+function deleteDepartment(){
+    inquirer
+    .prompt({
+        name: "department",
+        type: "input",
+        message: "Enter department name:"
+    })
+    .then(function(res){
+        var query = "DELETE FROM employee_trackerDB.departments WHERE name = ?";
+        connection.query(query, [res["department"]], function(err, res) {
+            console.log(`The new department was DELETED from the list`);
+            connection.end();
+        });
+    })
+};
+
+function deleteRole(){
+    inquirer
+    .prompt(
+    {
+        name: "title",
+        type: "input",
+        message: "Enter new department role title to DELETE:"
+    })
+    .then(function(res){
+        var query = "DELETE FROM employee_trackerDB.role WHERE title = ?";
+        connection.query(query, res["title"], function(err, res) {
+            console.log(`The new role was DELETED from the list`);
+            connection.end();
+        });
+    });
+};
+
+function deleteEmployee(){
+    inquirer
+    .prompt([
+    {
+        name: "name",
+        type: "input",
+        message: "Enter new employee first name:"
+    },
+    {
+        name: "lastName",
+        type: "input",
+        message: "Enter employee last name"
+    }
+    ])
+    .then(function(res){
+        var query = "DELETE FROM employee_trackerDB.employee WHERE first_name = ? AND last_name = ?" ;
+        connection.query(query, [res["name"], res["lastName"]], function(err, res) {
+            console.log(`The new employee was DELETED from the list`);
             connection.end();
         });
     });
