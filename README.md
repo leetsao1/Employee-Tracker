@@ -5,7 +5,7 @@
   APP URL: https://fast-headland-12010.herokuapp.com/
 
 ![Gif](./Assets/SQL1.gif)
-![Gif](./Assets/SQL1.gif)
+![Gif](./Assets/SQL2.gif)
 
 
 MIT License
